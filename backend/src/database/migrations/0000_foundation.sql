@@ -1,0 +1,10 @@
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+CREATE TABLE roles (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), name text NOT NULL UNIQUE, description text, created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz NOT NULL DEFAULT now());
+CREATE TABLE permissions (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), name text NOT NULL UNIQUE, description text, created_at timestamptz NOT NULL DEFAULT now());
+CREATE TABLE role_permissions (role_id uuid NOT NULL REFERENCES roles(id) ON DELETE CASCADE, permission_id uuid NOT NULL REFERENCES permissions(id) ON DELETE CASCADE, PRIMARY KEY(role_id, permission_id));
+CREATE TABLE users (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), role_id uuid NOT NULL REFERENCES roles(id) ON DELETE RESTRICT, email text NOT NULL, password_hash text NOT NULL, full_name text NOT NULL, phone text, is_active boolean NOT NULL DEFAULT true, created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz NOT NULL DEFAULT now());
+CREATE UNIQUE INDEX users_email_lower_uidx ON users(lower(email));
+CREATE INDEX users_role_idx ON users(role_id);
+CREATE TABLE refresh_tokens (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), user_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE, token_hash text NOT NULL, expires_at timestamptz NOT NULL, revoked_at timestamptz, created_at timestamptz NOT NULL DEFAULT now());
+CREATE INDEX refresh_tokens_user_idx ON refresh_tokens(user_id);
+CREATE INDEX refresh_tokens_expiry_idx ON refresh_tokens(expires_at);

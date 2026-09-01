@@ -1,0 +1,4 @@
+import{Type}from'class-transformer';import{IsDateString,IsIn,IsInt,IsOptional,IsString,IsUUID,Matches,Max,MaxLength,Min}from'class-validator';
+export class CreateAppointmentDto{@IsUUID()patientId!:string;@IsUUID()doctorId!:string;@IsUUID()serviceId!:string;@IsDateString()appointmentDate!:string;@Matches(/^([01]\d|2[0-3]):[0-5]\d$/)startTime!:string;@Matches(/^([01]\d|2[0-3]):[0-5]\d$/)endTime!:string;@IsOptional()@IsString()@MaxLength(1000)notes?:string;}
+export class AppointmentListQueryDto{@Type(()=>Number)@IsInt()@Min(1)page=1;@Type(()=>Number)@IsInt()@Min(1)@Max(100)limit=20;@IsOptional()@IsDateString()date?:string;@IsOptional()@IsIn(['BOOKED','CONFIRMED','CHECKED_IN','IN_PROGRESS','COMPLETED','CANCELLED','NO_SHOW'])status?:'BOOKED'|'CONFIRMED'|'CHECKED_IN'|'IN_PROGRESS'|'COMPLETED'|'CANCELLED'|'NO_SHOW';}
+export class UpdateAppointmentStatusDto{@IsIn(['CONFIRMED','CANCELLED','NO_SHOW'])status!:'CONFIRMED'|'CANCELLED'|'NO_SHOW';}

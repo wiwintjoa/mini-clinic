@@ -1,0 +1,2 @@
+export type CoreMeasurement={systolicBloodPressure:number;diastolicBloodPressure:number;weightKg:number;heightCm:number};
+export function isValidCoreMeasurement(value:CoreMeasurement){return Number.isInteger(value.systolicBloodPressure)&&value.systolicBloodPressure>=40&&value.systolicBloodPressure<=300&&Number.isInteger(value.diastolicBloodPressure)&&value.diastolicBloodPressure>=20&&value.diastolicBloodPressure<=200&&value.weightKg>0&&value.weightKg<=500&&value.heightCm>0&&value.heightCm<=250;}
